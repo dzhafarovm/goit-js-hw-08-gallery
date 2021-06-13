@@ -99,12 +99,12 @@ function createGallery(items) {
 ulEl.addEventListener('click', onPictureClick);
 function onPictureClick(evt) {
   evt.preventDefault();
+  
   if (evt.target.nodeName !== 'IMG') {
       return;
    } 
   
   modal.classList.add('is-open');
-  
   modalImg.src = evt.target.dataset.source;
   modalImg.alt = evt.target.alt;
 };
@@ -113,12 +113,13 @@ function onPictureClick(evt) {
 // --3--
 closeModalBtn.addEventListener('click', closeModal);
 overleyEl.addEventListener('click', closeModal);
+document.addEventListener('keydown', closeModalOnEscape);
 
-document.addEventListener('keydown', (evt) => {
+function closeModalOnEscape(evt) {
    if (evt.code === 'Escape' && modal.classList.contains('is-open') === true) {
       closeModal();
    }
-})
+};
 
 function closeModal() {
   modal.classList.remove('is-open');
