@@ -107,24 +107,25 @@ function onPictureClick(evt) {
   modal.classList.add('is-open');
   modalImg.src = evt.target.dataset.source;
   modalImg.alt = evt.target.alt;
+  document.addEventListener('keydown', closeModalOnEscape);
 };
 
 
 // --3--
 closeModalBtn.addEventListener('click', closeModal);
 overleyEl.addEventListener('click', closeModal);
-document.addEventListener('keydown', closeModalOnEscape);
 
 function closeModalOnEscape(evt) {
-   if (evt.code === 'Escape' && modal.classList.contains('is-open') === true) {
-      closeModal();
-   }
+  if (evt.code === 'Escape') {
+    closeModal();
+  }
 };
 
 function closeModal() {
   modal.classList.remove('is-open');
   modalImg.src = '';
   modalImg.alt = '';
+  document.removeEventListener('keydown', closeModalOnEscape);
 };
 
 
