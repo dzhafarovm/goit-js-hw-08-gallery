@@ -70,12 +70,13 @@ const modal = document.querySelector('.js-lightbox');
 const overleyEl = document.querySelector('.lightbox__overlay');
 const modalImg = document.querySelector('.lightbox__image');
 const closeModalBtn = document.querySelector('button[data-action="close-lightbox"]');
+let currentIndex;
 
 
 // --1--
 createGallery(galleryItems);
 function createGallery(items) {
-  const markup = items.map(item =>
+  const markup = items.map((item, idx) =>
     `
     <li class="gallery__item">
       <a class="gallery__link"
@@ -85,6 +86,7 @@ function createGallery(items) {
           class="gallery__image"
           src="${item.preview}"
           data-source="${item.original}"
+          data-index="${idx}"
           alt="${item.description}"
         />
       </a>
@@ -101,13 +103,16 @@ function onPictureClick(evt) {
   evt.preventDefault();
   
   if (evt.target.nodeName !== 'IMG') {
-      return;
-   } 
+    return;
+  }
   
   modal.classList.add('is-open');
   modalImg.src = evt.target.dataset.source;
   modalImg.alt = evt.target.alt;
+  currentIndex = Number(evt.target.dataset.index);
   document.addEventListener('keydown', closeModalOnEscape);
+  document.addEventListener('keydown', onRight);
+  document.addEventListener('keydown', onLeft);
 };
 
 
@@ -126,12 +131,35 @@ function closeModal() {
   modalImg.src = '';
   modalImg.alt = '';
   document.removeEventListener('keydown', closeModalOnEscape);
+  document.removeEventListener('keydown', onRight);
+  document.removeEventListener('keydown', onLeft);
 };
 
+function onRight(evt) {
+  if (evt.code !== 'ArrowRight') {
+    return
+  }
+  
+  if (currentIndex + 1 > galleryItems.length - 1) {
+    currentIndex = 0;
+  } else {
+    currentIndex += 1;
+  } changeImg()
+}
 
+function onLeft(evt) {
+  if (evt.code !== 'ArrowLeft') {
+    return
+  }
+  
+  if (currentIndex - 1 < 0) {
+    currentIndex = galleryItems.length - 1;
+  } else {
+    currentIndex -= 1;
+  } changeImg()
+}
 
-
-
-
-
-
+function changeImg() {
+  modalImg.src = galleryItems[currentIndex].original;
+  modalImg.alt = galleryItems[currentIndex].description;
+}
