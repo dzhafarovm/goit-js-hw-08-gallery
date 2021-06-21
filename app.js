@@ -110,9 +110,7 @@ function onPictureClick(evt) {
   modalImg.src = evt.target.dataset.source;
   modalImg.alt = evt.target.alt;
   currentIndex = Number(evt.target.dataset.index);
-  document.addEventListener('keydown', closeModalOnEscape);
-  document.addEventListener('keydown', onRight);
-  document.addEventListener('keydown', onLeft);
+  document.addEventListener('keydown', changeImgOnClick);
 };
 
 
@@ -120,26 +118,24 @@ function onPictureClick(evt) {
 closeModalBtn.addEventListener('click', closeModal);
 overleyEl.addEventListener('click', closeModal);
 
-function closeModalOnEscape(evt) {
+function changeImgOnClick(evt) {
   if (evt.code === 'Escape') {
     closeModal();
-  }
+  } else if (evt.code === 'ArrowRight') {
+    onRight();
+  } else if (evt.code === 'ArrowLeft') {
+    onLeft();
+  };
 };
 
 function closeModal() {
   modal.classList.remove('is-open');
   modalImg.src = '';
   modalImg.alt = '';
-  document.removeEventListener('keydown', closeModalOnEscape);
-  document.removeEventListener('keydown', onRight);
-  document.removeEventListener('keydown', onLeft);
+  document.removeEventListener('keydown', changeImgOnClick);
 };
 
-function onRight(evt) {
-  if (evt.code !== 'ArrowRight') {
-    return
-  }
-  
+function onRight() { 
   if (currentIndex + 1 > galleryItems.length - 1) {
     currentIndex = 0;
   } else {
@@ -147,11 +143,7 @@ function onRight(evt) {
   } changeImg()
 }
 
-function onLeft(evt) {
-  if (evt.code !== 'ArrowLeft') {
-    return
-  }
-  
+function onLeft() {
   if (currentIndex - 1 < 0) {
     currentIndex = galleryItems.length - 1;
   } else {
